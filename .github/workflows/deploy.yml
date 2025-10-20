@@ -95,7 +95,7 @@ jobs:
       - name: Update Lambda Function
         run: |
           aws lambda update-function-code \
-            --function-name famtree-lambda \
+            --function-name ft1-backend-lambda \
             --zip-file fileb://lambda.zip \
             --region ${{ secrets.AWS_REGION }}
         env:
