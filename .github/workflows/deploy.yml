@@ -10,16 +10,31 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      AWS_REGION: us-east-1                # change if your S3/Lambda are in another region
-      S3_BUCKET: ftm1-s3-eu       # e.g. famtree-bucket
-      DISTRIBUTION_ID: EGHJFIL6SA7PK  # e.g. E1ABCDXYZ
-      LAMBDA_NAME: ft1-backend-lambda          # your deployed Lambda function name
+      AWS_REGION: us-east-1                 # your region
+      S3_BUCKET: ftm1-s3-eu        # your S3 bucket
+      DISTRIBUTION_ID: EGHJFIL6SA7PK   # your CloudFront ID
+      LAMBDA_NAME: ft1-backend-lambda          # your Lambda name
+      API_GATEWAY_ID: uqgweqh0j6            # your API Gateway ID (important!)
+      STAGE_NAME: prod                      # stage name in API Gateway (usually prod)
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
       # ---------- FRONTEND ----------
+      - name: Get API Gateway URL
+        id: apigateway
+        run: |
+          GATEWAY_URL="https://${API_GATEWAY_ID}.execute-api.${AWS_REGION}.amazonaws.com/${STAGE_NAME}"
+          echo "API_URL=$GATEWAY_URL" >> $GITHUB_ENV
+          echo "✅ API Gateway URL: $GATEWAY_URL"
+
+      - name: Inject API URL into frontend .env.production
+        working-directory: client
+        run: |
+          echo "VITE_API_URL=${API_URL}" > .env.production
+          cat .env.production
+
       - name: Build frontend
         working-directory: client
         run: |
@@ -50,7 +65,7 @@ jobs:
       - name: Zip backend
         run: |
           cd server
-          zip -r ../lambda.zip . -x "node_modules/*" "*.env" ".history/*" ".git/*"
+          zip -r ../lambda.zip . -x "node_modules/*" "*.env" ".git/*" ".history/*"
 
       - name: Deploy to Lambda
         uses: appleboy/lambda-action@v0.2.0
