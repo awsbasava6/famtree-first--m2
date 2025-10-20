@@ -32,15 +32,15 @@ jobs:
 
       # --- DEPLOY FRONTEND TO S3 ---
       - name: Deploy to S3
-        uses: aws-actions/s3-sync@v2
-        with:
-          bucket: ${{ env.S3_BUCKET }}
-          region: ${{ env.AWS_REGION }}
-          source: client/dist
-          delete: true
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          uses: jakejarvis/s3-sync-action@v0.5.1
+            with:
+            args: --acl public-read --delete
+      env:
+        AWS_S3_BUCKET: ${{ secrets.S3_BUCKET }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ${{ secrets.AWS_REGION }}
+        SOURCE_DIR: 'client/dist
 
       # --- INVALIDATE CLOUDFRONT CACHE ---
       - name: Invalidate CloudFront cache
