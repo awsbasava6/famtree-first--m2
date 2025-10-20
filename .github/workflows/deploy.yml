@@ -26,7 +26,6 @@ jobs:
         with:
           node-version: 18
 
-      # --- CACHE NODE MODULES ---
       - name: Cache Node.js modules
         uses: actions/cache@v3
         with:
@@ -44,25 +43,22 @@ jobs:
       - name: Deploy Frontend to S3
         uses: jakejarvis/s3-sync-action@v0.5.1
         with:
-          args:  --delete
+          args: --delete
         env:
           AWS_S3_BUCKET: ${{ secrets.S3_BUCKET }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
-          SOURCE_DIR: 'client/dist'
+          SOURCE_DIR: client/dist
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
   # ------------------ INVALIDATE CLOUDFRONT ------------------
-
   invalidate-cloudfront:
+    needs: frontend     # 👈 ensures invalidation runs AFTER frontend deploy
     runs-on: ubuntu-latest
     env:
       DISTRIBUTION: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
-      PATHS: '/index.html /static/*'  # or other paths you want to invalidate
+      PATHS: '/*'
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -73,9 +69,8 @@ jobs:
       - name: Invalidate CloudFront cache
         run: |
           aws cloudfront create-invalidation \
-            --distribution-id $DISTRIBUTION \
-            --paths $PATHS
-
+            --distribution-id "$DISTRIBUTION" \
+            --paths "$PATHS"
 
   # ------------------ BACKEND ------------------
   backend:
@@ -102,7 +97,3 @@ jobs:
             --function-name ft1-backend-lambda \
             --zip-file fileb://lambda.zip \
             --region ${{ secrets.AWS_REGION }}
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
