@@ -1,18 +1,27 @@
 
-# ---------------------------
-# Frontend (React + Vite)
-# ---------------------------
+# Use official node image
+FROM node:20-alpine
 
-# Build stage
-FROM node:18-alpine AS build
+# Set working directory
 WORKDIR /app
+
+# Copy package.json and package-lock.json first (for caching)
 COPY package*.json ./
-RUN npm ci
+
+# Install dependencies
+RUN npm install
+
+# Copy rest of the code
 COPY . .
+
+# Make local binaries executable
+RUN chmod +x ./node_modules/.bin/vite
+
+# Build
 RUN npm run build
 
-# Production Nginx stage
-FROM nginx:alpine
-COPY --from=build /app/dist /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+# Optional: expose port
+EXPOSE 3000
+
+# Start command
+CMD ["npm", "run", "preview"]

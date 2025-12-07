@@ -8,6 +8,8 @@ import SelectAccount from "./pages/SelectAccount";
 import VerifyOtp from "./pages/VerifyOtp";
 import Dashboard from "./pages/Dashboard";
 import ChildrenPage from "./components/ChildrenPage";
+import Childhood from "./pages/Childhood";
+import CategoryPage from "./pages/CategoryPage";
 
 
 function App() {
@@ -21,7 +23,8 @@ function App() {
         <Route path="/verify-otp" element={<VerifyOtp />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/children" element={<ChildrenPage />} />
-        <Route path="/:category" element={<ComingSoon />} />
+        <Route path="/childhood" element={<Childhood />} />
+        <Route path="/category/:type" element={<CategoryPage />} />
       </Routes>
     </div>
   );
