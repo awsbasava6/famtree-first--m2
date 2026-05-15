@@ -1,7 +1,7 @@
-aws_region   = "us-east-1"
+aws_region = "us-east-1"
 
-bucket_name  = "famtree-dev-bucket"
+bucket_name = "famtree-dev-bucket"
 
-environment  = "dev"
+environment = "dev"
 
 instance_type = "t3.micro"
