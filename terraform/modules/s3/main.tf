@@ -2,18 +2,24 @@ resource "aws_s3_bucket" "bucket" {
 
   bucket = var.bucket_name
 
+  tags = {
+
+    Environment = var.environment
+
+    Terraform = "true"
+
+  }
+
 }
 
-resource "aws_s3_bucket_public_access_block" "public_access" {
+resource "aws_s3_bucket_versioning" "bucket" {
 
   bucket = aws_s3_bucket.bucket.id
 
-  block_public_acls       = false
+  versioning_configuration {
 
-  block_public_policy     = false
+    status = "Enabled"
 
-  ignore_public_acls      = false
-
-  restrict_public_buckets = false
+  }
 
 }
