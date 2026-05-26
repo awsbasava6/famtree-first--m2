@@ -1,5 +1,5 @@
-<<<<<<< HEAD
-FROM node:22
+
+FROM node:22-alpine
 
 WORKDIR /app
 
@@ -26,7 +26,6 @@ CMD ["npm", "run", "dev", "--", "--host"]
 
 
 
-=======
 
 # Use official node image
 FROM node:20-alpine
@@ -80,5 +79,4 @@ COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
 
->>>>>>> 9dc5f2f2df9ca83266444b90073f9751dfeea9c1
->>>>>>> 23dc398976dbd9c381dade93c6d03a4c0b04be53
+
