@@ -51,3 +51,19 @@ module "ec2" {
   key_name = var.key_name
 
 }
+
+module "ecr" {
+
+  source = "./modules/ecr"
+
+  repository_name = var.repository_name
+
+}
+
+module "frontend_ecr" {
+
+  source = "./modules/ecr"
+
+  repository_name = "famtree_frontend"
+
+}

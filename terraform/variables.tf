@@ -42,13 +42,14 @@ variable "ami_id" {
 
 }
 
-variable "instance_type" {
+
+variable "key_name" {
 
   type = string
 
 }
 
-variable "key_name" {
+variable "repository_name" {
 
   type = string
 
