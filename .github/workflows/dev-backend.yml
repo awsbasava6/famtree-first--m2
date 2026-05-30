@@ -28,7 +28,7 @@ jobs:
 
 
       - name: Debug ECR URI
-           run: |
+        run: |
              echo "ECR_URI=${{ secrets.ECR_URI }}"
      
       - name: Build Docker Image
