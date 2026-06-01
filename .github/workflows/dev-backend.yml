@@ -34,10 +34,10 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
 
-      - name: Debug ECR URI
+      - name: Debug Backend ECR URI
         run: |
-             echo "ECR_URI=${{ secrets.ECR_URI }}"
-     
+           echo "BACKEND_ECR_URI=${{ secrets.BACKEND_ECR_URI }}"
+       
       - name: Build Docker Image
         run: |
           docker build -t famtree_backend ./server
